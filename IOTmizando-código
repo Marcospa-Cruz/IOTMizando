@@ -7,7 +7,7 @@
 #define FIREBASE_AUTH "fTbrSgWjzP8CRNRhZI5qeIaBUwfXgFNtdhA8ewAr"
 
 // Declarando e inicializando a variável id
-int id = 1; // Inicialização de exemplo
+int id = 1; 
 
 void setup() {
     Serial.begin(115200);
@@ -27,7 +27,7 @@ void setup() {
 
         if (!res) {
             Serial.println("Falha na conexão");
-            // Reiniciar o processo de configuração do ponto de acesso
+            // Reiniciando o ponto de acesso para uma novo conexão
             res = wm.startConfigPortal("ESP32-IOTMizando", "iotmizando");
             if (!res) {
                 Serial.println("Falha ao iniciar o portal de configuração. Reiniciando...");
@@ -67,11 +67,10 @@ void setup() {
         }
     }
 
-    // Configura a sincronização NTP para o fuso horário de Brasília (BRT, UTC-3)
-    // Horário de verão não é mais observado no Brasil, portanto, o DST é 0.
+    // Configuração do servidor NTP com o fuso do horário de Brasília
     configTime(-3 * 3600, 0, "a.ntp.br", "b.ntp.br");
 
-    // Espera a sincronização do tempo
+    // Sincronização do tempo
     struct tm timeinfo;
     if (!getLocalTime(&timeinfo)) {
         Serial.println("Falha ao obter a hora");
@@ -106,11 +105,11 @@ void loop() {
     jsonDoc["Data"] = timeString; // Usa a string formatada
     jsonDoc["ID"] = id;
 
-    // Serializa o JSON para uma string
+    
     String data;
     jsonDoc.printTo(data);
 
-    // Envia os dados para o Firebase
+    // Enviando os dados para o Firebase (Cloud)
     if (Firebase.pushString("/data", data)) {
         Serial.println("Dados enviados com sucesso");
         id++; // Incrementa o ID para garantir unicidade
